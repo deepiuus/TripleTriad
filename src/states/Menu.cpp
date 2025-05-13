@@ -11,8 +11,8 @@
 
 namespace triad
 {
-    Menu::Menu(StateManager &stateManager) 
-        : _stateManager(stateManager), width(800), height(600), _selectedOption(0), _optionSelected(false)
+    Menu::Menu(StateManager &stateManager)
+    : _stateManager(stateManager), _window(stateManager.GetWindow()), width(800), height(600), _selectedOption(0), _optionSelected(false)
     {
         _options = {"Game", "Settings", "Quit"};
     }
@@ -23,13 +23,12 @@ namespace triad
 
     void Menu::Init()
     {
-       try {
-            window.create(sf::VideoMode(width, height), "Triple Triad");
+        try {
             if (!font.loadFromFile("assets/fonts/upheavtt.ttf")) {
                 throw Error("Failed to load font");
             }
         } catch (const Error &e) {
-            window.close();
+            _window.close();
             throw;
         }
     }
@@ -63,7 +62,7 @@ namespace triad
 
     void Menu::Update()
     {
-        if (!window.isOpen()) {
+        if (!_window.isOpen()) {
             _stateManager.RequestStateChange(nullptr);
             return;
         }
@@ -87,7 +86,7 @@ namespace triad
     {
         const float spacing = 50.0f;
 
-        window.clear(sf::Color::Black);
+        _window.clear(sf::Color::Black);
         for (size_t i = 0; i < _options.size(); ++i) {
             text.setFont(font);
             text.setString(_options[i]);
@@ -95,9 +94,9 @@ namespace triad
             text.setFillColor(i == _selectedOption ? sf::Color::Red : sf::Color::White);
             text.setPosition(width / 2 - text.getGlobalBounds().width / 2,
                             height / 2 - (_options.size() * spacing) / 2 + i * spacing);
-            window.draw(text);
+            _window.draw(text);
         }
-        window.display();
+        _window.display();
     }
 
     void Menu::Destroy()

@@ -19,6 +19,7 @@ namespace triad
             bool IsWindowOpen() const;
             void HandleInput();
             IGames *GetCurrentState() const;
+            sf::RenderWindow& GetWindow();
             void SetState(std::unique_ptr<IGames> state);
             void RequestStateChange(std::unique_ptr<IGames> nextState);
             void ProcessStateChange();

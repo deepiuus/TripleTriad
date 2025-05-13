@@ -60,6 +60,11 @@ namespace triad
         return _currentState.get();
     }
 
+    sf::RenderWindow& StateManager::GetWindow()
+    {
+        return _window;
+    }
+
     void StateManager::SetState(std::unique_ptr<IGames> state)
     {
         if (_currentState) {

@@ -30,7 +30,6 @@ namespace triad
         private:
             int width;
             int height;
-            sf::RenderWindow window;
             sf::Event event;
             sf::Texture texture;
             sf::Sprite sprite;
@@ -42,6 +41,7 @@ namespace triad
             bool _optionSelected;
             std::vector<std::string> _options;
             StateManager &_stateManager;
+            sf::RenderWindow &_window;
     };
 }
 
