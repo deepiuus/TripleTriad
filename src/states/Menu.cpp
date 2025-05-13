@@ -108,10 +108,7 @@ namespace triad
             if (optionBounds.contains(static_cast<float>(mousePosition.x),
                                     static_cast<float>(mousePosition.y)))
                 _selectedOption = static_cast<int>(i);
-            if (i == _selectedOption)
-                text.setFillColor(sf::Color::Red);
-            else
-                text.setFillColor(sf::Color::White);
+            text.setFillColor(i == _selectedOption ? sf::Color::Red : sf::Color::White);
             text.setPosition(width / 2 - text.getGlobalBounds().width / 2,
                             height / 2 - (_options.size() * spacing) / 2 + i * spacing);
             _window.draw(text);
