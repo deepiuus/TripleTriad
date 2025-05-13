@@ -10,6 +10,7 @@
 
 #include "../IGames.hpp"
 #include "../utils/StateManager.hpp"
+#include "Menu.hpp"
 
 namespace triad
 {

@@ -38,6 +38,7 @@ namespace triad
             sf::SoundBuffer buffer;
             sf::Sound sound;
             int _selectedOption;
+            int _hoveredOption;
             bool _optionSelected;
             std::vector<std::string> _options;
             StateManager &_stateManager;

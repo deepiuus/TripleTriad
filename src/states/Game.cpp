@@ -23,7 +23,13 @@ namespace triad
 
     void Game::SetKey(TKey key)
     {
-        (void)key;
+        switch (key) {
+            case TKey::ESCAPE:
+                _stateManager.RequestStateChange(std::make_unique<Menu>(_stateManager));
+                break;
+            default:
+                break;
+        }
     }
 
     void Game::Update()
@@ -32,6 +38,8 @@ namespace triad
 
     void Game::Display()
     {
+        _stateManager.GetWindow().clear(sf::Color::Blue);
+        _stateManager.GetWindow().display();
     }
 
     void Game::Destroy()

@@ -12,7 +12,7 @@
 namespace triad
 {
     Menu::Menu(StateManager &stateManager)
-    : _stateManager(stateManager), _window(stateManager.GetWindow()), width(800), height(600), _selectedOption(0), _optionSelected(false)
+        : _stateManager(stateManager), _window(stateManager.GetWindow()), width(800), height(600), _selectedOption(0), _optionSelected(false), _hoveredOption(-1)
     {
         _options = {"Game", "Settings", "Quit"};
     }
@@ -42,7 +42,13 @@ namespace triad
             case TKey::DOWN:
                 _selectedOption = (_selectedOption + 1) % _options.size();
                 break;
+            case TKey::ESCAPE:
+                _window.close();
+                _stateManager.RequestStateChange(nullptr);
+                break;
             case TKey::ENTER:
+            case TKey::LCLICK:
+            case TKey::RCLICK:
                 _optionSelected = true;
                 break;
             default:
@@ -75,6 +81,7 @@ namespace triad
                     _stateManager.RequestStateChange(std::make_unique<Settings>(_stateManager));
                     break;
                 case 2:
+                    _window.close();
                     _stateManager.RequestStateChange(nullptr);
                     break;
             }
@@ -85,13 +92,26 @@ namespace triad
     void Menu::Display()
     {
         const float spacing = 50.0f;
+        sf::Vector2i mousePosition = sf::Mouse::getPosition(_window);
 
         _window.clear(sf::Color::Black);
         for (size_t i = 0; i < _options.size(); ++i) {
             text.setFont(font);
             text.setString(_options[i]);
             text.setCharacterSize(40);
-            text.setFillColor(i == _selectedOption ? sf::Color::Red : sf::Color::White);
+            sf::FloatRect optionBounds(
+                width / 2 - text.getGlobalBounds().width / 2,
+                height / 2 - (_options.size() * spacing) / 2 + i * spacing,
+                text.getGlobalBounds().width,
+                text.getCharacterSize()
+            );
+            if (optionBounds.contains(static_cast<float>(mousePosition.x),
+                                    static_cast<float>(mousePosition.y)))
+                _selectedOption = static_cast<int>(i);
+            if (i == _selectedOption)
+                text.setFillColor(sf::Color::Red);
+            else
+                text.setFillColor(sf::Color::White);
             text.setPosition(width / 2 - text.getGlobalBounds().width / 2,
                             height / 2 - (_options.size() * spacing) / 2 + i * spacing);
             _window.draw(text);
