@@ -7,6 +7,7 @@
 
 #include "IGames.hpp"
 #include "utils/StateManager.hpp"
+#include "utils/CardManager.hpp"
 #include "utils/Error.hpp"
 #include "states/Menu.hpp"
 
@@ -14,6 +15,7 @@ int main(void)
 {
     try {
         triad::StateManager stateManager;
+        triad::CardManager::GetInstance().LoadCards();
         stateManager.SetState(std::make_unique<triad::Menu>(stateManager));
         while (stateManager.IsWindowOpen()) {
             stateManager.HandleInput();

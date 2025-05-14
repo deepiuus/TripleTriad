@@ -31,8 +31,6 @@ namespace triad
             int width;
             int height;
             sf::Event event;
-            sf::Texture texture;
-            sf::Sprite sprite;
             sf::Font font;
             sf::Text text;
             sf::SoundBuffer buffer;

@@ -9,7 +9,8 @@
 
 namespace triad
 {
-    Game::Game(StateManager &stateManager) : _stateManager(stateManager)
+    Game::Game(StateManager &stateManager)
+        : _stateManager(stateManager), _window(stateManager.GetWindow()), width(800), height(600)
     {
     }
 
@@ -17,8 +18,15 @@ namespace triad
     {
     }
 
-    void Game::Init()
+   void Game::Init()
     {
+        if (!_texture.loadFromFile("assets/sprites/Board.png")) {
+            throw Error("Failed to load texture");
+        }
+        const Card &card = CardManager::GetInstance().GetCard(2);
+        _cardSprite.setTexture(card.GetTexture());
+        _cardSprite.setPosition(width / 2 - card.GetTexture().getSize().x / 2,
+                                height / 2 - card.GetTexture().getSize().y / 2);
     }
 
     void Game::SetKey(TKey key)
@@ -38,8 +46,13 @@ namespace triad
 
     void Game::Display()
     {
-        _stateManager.GetWindow().clear(sf::Color::Blue);
-        _stateManager.GetWindow().display();
+        _window.clear(sf::Color::Blue);
+        _sprite.setTexture(_texture);
+        _sprite.setPosition(width / 2 - _texture.getSize().x / 2,
+                            height / 2 - _texture.getSize().y / 2);
+        _sprite.setScale(1.0f, 1.0f);
+        _window.draw(_sprite);
+        _window.draw(_cardSprite);
     }
 
     void Game::Destroy()

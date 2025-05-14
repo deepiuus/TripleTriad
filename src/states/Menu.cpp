@@ -118,8 +118,6 @@ namespace triad
 
     void Menu::Destroy()
     {
-        texture = sf::Texture();
-        sprite = sf::Sprite();
         font = sf::Font();
         text = sf::Text();
         sound = sf::Sound();
