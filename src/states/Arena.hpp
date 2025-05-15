@@ -33,8 +33,14 @@ namespace triad
             sf::Texture _texture;
             sf::Sprite _cardSprite;
             StateManager &_stateManager;
-            bool _dragging;
+            std::vector<sf::Sprite> _player1Cards;
+            std::vector<sf::Sprite> _player2Cards;
+            std::vector<const Card*> _player1Deck;
+            std::vector<const Card*> _player2Deck;
+            sf::Vector2i _draggedCard{-1, -1};
+            bool _dragging = false;
             sf::Vector2f _dragOffset;
+            sf::FloatRect _boardGrid[3][3];
     };
 }
 
