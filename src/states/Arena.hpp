@@ -26,6 +26,12 @@ namespace triad
             void Destroy() override;
 
         private:
+            void SetupBoard(float cellSize, float cellGap, float gridStartX, float gridStartY);
+            void SetupCards(int cardSpacing, int cardY);
+            void DraggingCard();
+            void OccupyCell();
+            void PlaceCard(int x, int y);
+            void ResetCard();
             int width;
             int height;
             sf::RenderWindow &_window;
