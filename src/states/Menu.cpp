@@ -6,7 +6,8 @@
 */
 
 #include "Menu.hpp"
-#include "Game.hpp"
+#include "Adventure.hpp"
+#include "Arena.hpp"
 #include "Settings.hpp"
 
 namespace triad
@@ -14,7 +15,7 @@ namespace triad
     Menu::Menu(StateManager &stateManager)
         : _stateManager(stateManager), _window(stateManager.GetWindow()), width(800), height(600), _selectedOption(0), _optionSelected(false), _hoveredOption(-1)
     {
-        _options = {"Game", "Settings", "Quit"};
+        _options = {"Adventure", "Arena", "Settings", "Quit"};
     }
 
     Menu::~Menu()
@@ -75,12 +76,15 @@ namespace triad
         if (_optionSelected) {
             switch (_selectedOption) {
                 case 0:
-                    _stateManager.RequestStateChange(std::make_unique<Game>(_stateManager));
+                    _stateManager.RequestStateChange(std::make_unique<Adventure>(_stateManager));
                     break;
                 case 1:
-                    _stateManager.RequestStateChange(std::make_unique<Settings>(_stateManager));
+                    _stateManager.RequestStateChange(std::make_unique<Arena>(_stateManager));
                     break;
                 case 2:
+                    _stateManager.RequestStateChange(std::make_unique<Settings>(_stateManager));
+                    break;
+                case 3:
                     _window.close();
                     _stateManager.RequestStateChange(nullptr);
                     break;

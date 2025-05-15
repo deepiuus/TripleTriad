@@ -2,11 +2,11 @@
 ** EPITECH PROJECT, 2025
 ** TripleTriad [WSL: Debian]
 ** File description:
-** Game
+** Arena
 */
 
-#ifndef GAME_HPP_
-#define GAME_HPP_
+#ifndef ARENA_HPP_
+#define ARENA_HPP_
 
 #include "../IGames.hpp"
 #include "../utils/StateManager.hpp"
@@ -15,10 +15,10 @@
 
 namespace triad
 {
-    class Game : public IGames {
+    class Arena : public IGames {
         public:
-            Game(StateManager &stateManager);
-            ~Game() override;
+            Arena(StateManager &stateManager);
+            ~Arena() override;
             void Init() override;
             void SetKey(TKey key) override;
             void Update() override;
@@ -33,7 +33,9 @@ namespace triad
             sf::Texture _texture;
             sf::Sprite _cardSprite;
             StateManager &_stateManager;
+            bool _dragging;
+            sf::Vector2f _dragOffset;
     };
 }
 
-#endif /* !GAME_HPP_ */
+#endif /* !ARENA_HPP_ */

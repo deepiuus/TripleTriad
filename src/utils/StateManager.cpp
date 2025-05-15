@@ -58,6 +58,12 @@ namespace triad
                         default:
                             break;
                     }
+                } else if (event.type == sf::Event::MouseButtonReleased) {
+                    if (event.mouseButton.button == sf::Mouse::Left) {
+                        if (_currentState) {
+                            _currentState->SetKey(TKey::NONE);
+                        }
+                    }
                 }
                 if (key != TKey::NONE) {
                     _currentState->SetKey(key);

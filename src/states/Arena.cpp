@@ -2,23 +2,23 @@
 ** EPITECH PROJECT, 2025
 ** TripleTriad [WSL: Debian]
 ** File description:
-** Game
+** Arena
 */
 
-#include "Game.hpp"
+#include "Arena.hpp"
 
 namespace triad
 {
-    Game::Game(StateManager &stateManager)
+    Arena::Arena(StateManager &stateManager)
         : _stateManager(stateManager), _window(stateManager.GetWindow()), width(800), height(600)
     {
     }
 
-    Game::~Game()
+    Arena::~Arena()
     {
     }
 
-   void Game::Init()
+   void Arena::Init()
     {
         if (!_texture.loadFromFile("assets/sprites/Board.png")) {
             throw Error("Failed to load texture");
@@ -29,22 +29,41 @@ namespace triad
                                 height / 2 - card.GetTexture().getSize().y / 2);
     }
 
-    void Game::SetKey(TKey key)
+    void Arena::SetKey(TKey key)
     {
         switch (key) {
+            case TKey::LCLICK: {
+                sf::Vector2i mousePos = sf::Mouse::getPosition(_window);
+                sf::FloatRect bounds = _cardSprite.getGlobalBounds();
+                if (bounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                    _dragging = true;
+                    _dragOffset = _cardSprite.getPosition() - sf::Vector2f(mousePos);
+                }
+                break;
+            }
+            case TKey::RCLICK:
+            case TKey::ENTER:
+                break;
             case TKey::ESCAPE:
                 _stateManager.RequestStateChange(std::make_unique<Menu>(_stateManager));
+                break;
+            case TKey::NONE:
+                _dragging = false;
                 break;
             default:
                 break;
         }
     }
 
-    void Game::Update()
+    void Arena::Update()
     {
+        if (_dragging) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(_window);
+            _cardSprite.setPosition(sf::Vector2f(mousePos) + _dragOffset);
+        }
     }
 
-    void Game::Display()
+    void Arena::Display()
     {
         _window.clear(sf::Color::Blue);
         _sprite.setTexture(_texture);
@@ -55,7 +74,7 @@ namespace triad
         _window.draw(_cardSprite);
     }
 
-    void Game::Destroy()
+    void Arena::Destroy()
     {
     }
 }
