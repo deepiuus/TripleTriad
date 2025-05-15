@@ -41,6 +41,7 @@ namespace triad
             bool _dragging = false;
             sf::Vector2f _dragOffset;
             sf::FloatRect _boardGrid[3][3];
+            std::pair<int, int> _boardOccupancy[3][3];
     };
 }
 

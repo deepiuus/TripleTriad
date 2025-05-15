@@ -42,7 +42,7 @@ namespace triad
         _player2Cards.clear();
         int cardSpacing = 30;
         int cardY = height / 2 - (5 * 60 + 4 * cardSpacing) / 2;
-        for (int i = 0; i < 5; ++i) {
+        for (int i = 0; i < 5; i++) {
             sf::Sprite sprite1, sprite2;
             sprite1.setTexture(_player1Deck[i]->GetTexture());
             sprite1.setPosition(30, cardY + i * (60 + cardSpacing));
@@ -52,19 +52,30 @@ namespace triad
             sprite2.setPosition(width - 30 - sprite2.getTexture()->getSize().x, cardY + i * (60 + cardSpacing));
             _player2Cards.push_back(sprite2);
         }
-        float gridStartX = width / 2 - 120;
-        float gridStartY = height / 2 - 120;
-        float cellSize = 80;
-        for (int y = 0; y < 3; ++y)
-            for (int x = 0; x < 3; ++x)
-                _boardGrid[y][x] = sf::FloatRect(gridStartX + x * cellSize, gridStartY + y * cellSize, cellSize, cellSize);
+        float cellSize = 120;
+        float cellGap = 5;
+        float gridWidth = 3 * cellSize + 2 * cellGap;
+        float gridHeight = 3 * cellSize + 2 * cellGap;
+        float gridStartX = width / 2 - gridWidth / 2;
+        float gridStartY = height / 2 - gridHeight / 2;
+        for (int y = 0; y < 3; y++)
+            for (int x = 0; x < 3; x++)
+                _boardGrid[y][x] = sf::FloatRect(
+                    gridStartX + x * (cellSize + cellGap),
+                    gridStartY + y * (cellSize + cellGap),
+                    cellSize,
+                    cellSize
+                );
+        for (int y = 0; y < 3; y++)
+            for (int x = 0; x < 3; x++)
+                _boardOccupancy[y][x] = {-1, -1};
     }
 
     void Arena::SetKey(TKey key)
     {
         if (key == TKey::LCLICK) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(_window);
-            for (size_t i = 0; i < _player1Cards.size(); ++i) {
+            for (size_t i = 0; i < _player1Cards.size(); i++) {
                 if (_player1Cards[i].getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                     _dragging = true;
                     _draggedCard = {0, static_cast<int>(i)};
@@ -72,7 +83,7 @@ namespace triad
                     break;
                 }
             }
-            for (size_t i = 0; i < _player2Cards.size(); ++i) {
+            for (size_t i = 0; i < _player2Cards.size(); i++) {
                 if (_player2Cards[i].getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                     _dragging = true;
                     _draggedCard = {1, static_cast<int>(i)};
@@ -86,31 +97,49 @@ namespace triad
         }
         if (key == TKey::NONE) {
             if (_dragging) {
-                if (_draggedCard.x == 0) {
-                    sf::FloatRect bounds = _player1Cards[_draggedCard.y].getGlobalBounds();
-                    bool onGrid = false;
-                    for (int y = 0; y < 3; ++y)
-                        for (int x = 0; x < 3; ++x)
-                            if (_boardGrid[y][x].intersects(bounds))
-                                onGrid = true;
-                    if (!onGrid)
+                int foundX = -1, foundY = -1;
+                sf::FloatRect bounds;
+                if (_draggedCard.x == 0)
+                    bounds = _player1Cards[_draggedCard.y].getGlobalBounds();
+                else
+                    bounds = _player2Cards[_draggedCard.y].getGlobalBounds();
+
+                for (int y = 0; y < 3; y++)
+                    for (int x = 0; x < 3; x++)
+                        if (_boardGrid[y][x].intersects(bounds) && _boardOccupancy[y][x].first == -1) {
+                            foundX = x;
+                            foundY = y;
+                        }
+
+                if (foundX != -1 && foundY != -1) {
+                    sf::Vector2f cellCenter(
+                        _boardGrid[foundY][foundX].left + _boardGrid[foundY][foundX].width / 2.f,
+                        _boardGrid[foundY][foundX].top + _boardGrid[foundY][foundX].height / 2.f
+                    );
+                    if (_draggedCard.x == 0) {
                         _player1Cards[_draggedCard.y].setPosition(
-                            30, height / 2 - (5 * 60 + 4 * 30) / 2 + _draggedCard.y * (60 + 30));
-                } else if (_draggedCard.x == 1) {
-                    sf::FloatRect bounds = _player2Cards[_draggedCard.y].getGlobalBounds();
-                    bool onGrid = false;
-                    for (int y = 0; y < 3; ++y)
-                        for (int x = 0; x < 3; ++x)
-                            if (_boardGrid[y][x].intersects(bounds))
-                                onGrid = true;
-                    if (!onGrid)
+                            cellCenter.x - _player1Cards[_draggedCard.y].getTexture()->getSize().x / 2.f,
+                            cellCenter.y - _player1Cards[_draggedCard.y].getTexture()->getSize().y / 2.f
+                        );
+                    } else {
+                        _player2Cards[_draggedCard.y].setPosition(
+                            cellCenter.x - _player2Cards[_draggedCard.y].getTexture()->getSize().x / 2.f,
+                            cellCenter.y - _player2Cards[_draggedCard.y].getTexture()->getSize().y / 2.f
+                        );
+                    }
+                    _boardOccupancy[foundY][foundX] = { _draggedCard.x, _draggedCard.y };
+                } else {
+                    if (_draggedCard.x == 0)
+                        _player1Cards[_draggedCard.y].setPosition(30,
+                            height / 2 - (5 * 60 + 4 * 30) / 2 + _draggedCard.y * (60 + 30));
+                    else if (_draggedCard.x == 1)
                         _player2Cards[_draggedCard.y].setPosition(
                             width - 30 - _player2Cards[_draggedCard.y].getTexture()->getSize().x,
                             height / 2 - (5 * 60 + 4 * 30) / 2 + _draggedCard.y * (60 + 30));
                 }
+                _dragging = false;
+                _draggedCard = {-1, -1};
             }
-            _dragging = false;
-            _draggedCard = {-1, -1};
         }
     }
 
