@@ -98,6 +98,93 @@ namespace triad
                 cardY + _draggedCard.y * (60 + cardSpacing));
     }
 
+    void Arena::CaptureCard(int x, int y)
+    {
+        int playerCount = 0;
+        int ennemyCount = 0;
+        int currentPlayer = _boardOccupancy[y][x].first;
+        int currentIndex = _boardOccupancy[y][x].second;
+        const Card *currentCard = (currentPlayer == 0)
+            ? _player1Deck[currentIndex]
+            : _player2Deck[currentIndex];
+        int adjPlayer = 0;
+        int adjIndex = 0;
+        const Card *adjCard = nullptr;
+        if (y > 0) {
+            adjPlayer = _boardOccupancy[y - 1][x].first;
+            adjIndex = _boardOccupancy[y - 1][x].second;
+            if (adjPlayer != -1 && adjPlayer != currentPlayer) {
+                adjCard = (adjPlayer == 0)
+                    ? _player1Deck[adjIndex]
+                    : _player2Deck[adjIndex];
+                if (currentCard->GetTop() > adjCard->GetBottom()) {
+                    _boardOccupancy[y - 1][x].first = currentPlayer;
+                    printf("%s captured with %s the card %s from the top!\n",
+                        currentPlayer == 0 ? "Player" : "Ennemy",
+                        currentCard->GetName().c_str(),
+                        adjCard->GetName().c_str());
+                }
+            }
+        }
+        if (y < 2) {
+            adjPlayer = _boardOccupancy[y + 1][x].first;
+            adjIndex = _boardOccupancy[y + 1][x].second;
+            if (adjPlayer != -1 && adjPlayer != currentPlayer) {
+                adjCard = (adjPlayer == 0)
+                    ? _player1Deck[adjIndex]
+                    : _player2Deck[adjIndex];
+                if (currentCard->GetBottom() > adjCard->GetTop()) {
+                    _boardOccupancy[y + 1][x].first = currentPlayer;
+                    printf("%s captured with %s the card %s from the bottom!\n",
+                        currentPlayer == 0 ? "Player" : "Ennemy",
+                        currentCard->GetName().c_str(),
+                        adjCard->GetName().c_str());
+                }
+            }
+        }
+        if (x > 0) {
+            adjPlayer = _boardOccupancy[y][x - 1].first;
+            adjIndex = _boardOccupancy[y][x - 1].second;
+            if (adjPlayer != -1 && adjPlayer != currentPlayer) {
+                adjCard = (adjPlayer == 0)
+                    ? _player1Deck[adjIndex]
+                    : _player2Deck[adjIndex];
+                if (currentCard->GetLeft() > adjCard->GetRight()) {
+                    _boardOccupancy[y][x - 1].first = currentPlayer;
+                    printf("%s captured with %s the card %s from the left!\n",
+                        currentPlayer == 0 ? "Player" : "Ennemy",
+                        currentCard->GetName().c_str(),
+                        adjCard->GetName().c_str());
+                }
+            }
+        }
+        if (x < 2) {
+            adjPlayer = _boardOccupancy[y][x + 1].first;
+            adjIndex = _boardOccupancy[y][x + 1].second;
+            if (adjPlayer != -1 && adjPlayer != currentPlayer) {
+                adjCard = (adjPlayer == 0)
+                    ? _player1Deck[adjIndex]
+                    : _player2Deck[adjIndex];
+                if (currentCard->GetRight() > adjCard->GetLeft()) {
+                    _boardOccupancy[y][x + 1].first = currentPlayer;
+                    printf("%s captured with %s the card %s from the right!\n",
+                        currentPlayer == 0 ? "Player" : "Ennemy",
+                        currentCard->GetName().c_str(),
+                        adjCard->GetName().c_str());
+                }
+            }
+        }
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (_boardOccupancy[i][j].first == 0)
+                    playerCount++;
+                else if (_boardOccupancy[i][j].first == 1)
+                    ennemyCount++;
+            }
+        }
+        printf("Player has %d cards, ennemy has %d cards\n", playerCount, ennemyCount);
+    }
+
     void Arena::PlaceCard(int x, int y)
     {
         sf::Vector2f cellCenter = {
@@ -122,6 +209,9 @@ namespace triad
     {
         int foundX = -1;
         int foundY = -1;
+        if (_draggedCard.x < 0 || _draggedCard.y < 0 ||
+            _draggedCard.x > 1 || _draggedCard.y >= 5)
+            return;
         sf::FloatRect bounds = (_draggedCard.x == 0)
             ? _player1Cards[_draggedCard.y].getGlobalBounds()
             : _player2Cards[_draggedCard.y].getGlobalBounds();
@@ -134,10 +224,12 @@ namespace triad
                     foundX = x;
                     foundY = y;
                 }
-        if (foundX != -1 && foundY != -1)
+        if (foundX != -1 && foundY != -1) {
             PlaceCard(foundX, foundY);
-        else
+            CaptureCard(foundX, foundY);
+        } else {
             ResetCard();
+        }
         _dragging = false;
         _draggedCard = {-1, -1};
     }

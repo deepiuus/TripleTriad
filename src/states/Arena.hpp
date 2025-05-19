@@ -31,6 +31,7 @@ namespace triad
             void DraggingCard();
             void OccupyCell();
             void PlaceCard(int x, int y);
+            void CaptureCard(int x, int y);
             void ResetCard();
             int width;
             int height;

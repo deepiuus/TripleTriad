@@ -17,17 +17,23 @@ namespace triad
 {
     class Card {
         public:
-            Card(int id, const std::string &name, const std::string &description);
+            Card(int id, const std::string &name, int top, int bottom, int left, int right);
             int GetId() const;
             const std::string &GetName() const;
-            const std::string &GetDescription() const;
+            const int GetTop() const;
+            const int GetBottom() const;
+            const int GetLeft() const;
+            const int GetRight() const;
             bool LoadTexture(const std::string &path);
             const sf::Texture &GetTexture() const;
 
         private:
             int _id;
             std::string _name;
-            std::string _description;
+            int _top;
+            int _bottom;
+            int _left;
+            int _right;
             sf::Texture _texture;
     };
 
