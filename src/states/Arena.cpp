@@ -24,18 +24,18 @@ namespace triad
         sf::Sprite sprite2;
 
         _player1Deck = {
-            &CardManager::GetInstance().GetCard(1),
-            &CardManager::GetInstance().GetCard(2),
-            &CardManager::GetInstance().GetCard(3),
-            &CardManager::GetInstance().GetCard(4),
-            &CardManager::GetInstance().GetCard(5),
+            &CardManager::GetInstance().GetCard(21),
+            &CardManager::GetInstance().GetCard(21),
+            &CardManager::GetInstance().GetCard(21),
+            &CardManager::GetInstance().GetCard(21),
+            &CardManager::GetInstance().GetCard(21),
         };
         _player2Deck = {
-            &CardManager::GetInstance().GetCard(6),
-            &CardManager::GetInstance().GetCard(7),
-            &CardManager::GetInstance().GetCard(8),
-            &CardManager::GetInstance().GetCard(9),
-            &CardManager::GetInstance().GetCard(10),
+            &CardManager::GetInstance().GetCard(21),
+            &CardManager::GetInstance().GetCard(21),
+            &CardManager::GetInstance().GetCard(21),
+            &CardManager::GetInstance().GetCard(21),
+            &CardManager::GetInstance().GetCard(21),
         };
         _player1Cards.clear();
         _player2Cards.clear();
@@ -110,6 +110,7 @@ namespace triad
         int adjPlayer = 0;
         int adjIndex = 0;
         const Card *adjCard = nullptr;
+
         if (y > 0) {
             adjPlayer = _boardOccupancy[y - 1][x].first;
             adjIndex = _boardOccupancy[y - 1][x].second;
@@ -182,7 +183,7 @@ namespace triad
                     ennemyCount++;
             }
         }
-        printf("Player has %d cards, ennemy has %d cards\n", playerCount, ennemyCount);
+        printf("Player has %d cards, Ennemy has %d cards\n", playerCount, ennemyCount);
     }
 
     void Arena::PlaceCard(int x, int y)
@@ -209,6 +210,7 @@ namespace triad
     {
         int foundX = -1;
         int foundY = -1;
+
         if (_draggedCard.x < 0 || _draggedCard.y < 0 ||
             _draggedCard.x > 1 || _draggedCard.y >= 5)
             return;
@@ -218,8 +220,8 @@ namespace triad
 
         if (!_dragging)
             return;
-        for (int y = 0; y < 3; ++y)
-            for (int x = 0; x < 3; ++x)
+        for (int y = 0; y < 3; y++)
+            for (int x = 0; x < 3; x++)
                 if (_boardGrid[y][x].intersects(bounds) && _boardOccupancy[y][x].first == -1) {
                     foundX = x;
                     foundY = y;

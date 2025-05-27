@@ -13,7 +13,8 @@
 namespace triad
 {
     Menu::Menu(StateManager &stateManager)
-        : _stateManager(stateManager), _window(stateManager.GetWindow()), width(800), height(600), _selectedOption(0), _optionSelected(false), _hoveredOption(-1)
+        : _stateManager(stateManager), _window(stateManager.GetWindow()),
+        width(800), height(600), _selectedOption(0), _optionSelected(false), _hoveredOption(-1)
     {
         _options = {"Adventure", "Arena", "Settings", "Quit"};
     }

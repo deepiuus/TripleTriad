@@ -10,6 +10,7 @@
 
 #include "../IGames.hpp"
 #include "../utils/StateManager.hpp"
+#include "../utils/LevelManager.hpp"
 #include "Menu.hpp"
 
 namespace triad
@@ -25,7 +26,10 @@ namespace triad
             void Destroy() override;
 
         private:
+//          void MovePlayer(int dx, int dy);
             StateManager &_stateManager;
+            LevelManager _levelManager;
+            int tileSize;
     };
 }
 
