@@ -26,10 +26,14 @@ namespace triad
             void Destroy() override;
 
         private:
-//          void MovePlayer(int dx, int dy);
+            bool isCellFree(int x, int y) const;
+            bool isRockAt(int x, int y) const;
             StateManager &_stateManager;
             LevelManager _levelManager;
-            int tileSize;
+            const std::vector<std::vector<char>> *_map;
+            std::vector<sf::Vector2i> _rocks;
+            sf::Vector2i _playerPos;
+            int _tileSize;
     };
 }
 

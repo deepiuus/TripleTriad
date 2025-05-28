@@ -38,6 +38,12 @@ namespace triad
                         case sf::Keyboard::Down:
                             key = TKey::DOWN;
                             break;
+                        case sf::Keyboard::Left:
+                            key = TKey::LEFT;
+                            break;
+                        case sf::Keyboard::Right:
+                            key = TKey::RIGHT;
+                            break;
                         case sf::Keyboard::Enter:
                             key = TKey::ENTER;
                             break;
