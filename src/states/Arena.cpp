@@ -102,6 +102,7 @@ namespace triad
     {
         int playerCount = 0;
         int ennemyCount = 0;
+        int occupiedCount = 0;
         int currentPlayer = _boardOccupancy[y][x].first;
         int currentIndex = _boardOccupancy[y][x].second;
         const Card *currentCard = (currentPlayer == 0)
@@ -181,9 +182,23 @@ namespace triad
                     playerCount++;
                 else if (_boardOccupancy[i][j].first == 1)
                     ennemyCount++;
+                if (_boardOccupancy[i][j].first != -1)
+                    occupiedCount++;
             }
         }
         printf("Player has %d cards, Ennemy has %d cards\n", playerCount, ennemyCount);
+        if (occupiedCount == 9) {
+            if (playerCount > ennemyCount) {
+                printf("Player wins\n");
+                _stateManager.RequestStateChange(std::make_unique<Menu>(_stateManager));
+            } else if (ennemyCount > playerCount) {
+                printf("Ennemy wins\n");
+                _stateManager.RequestStateChange(std::make_unique<Menu>(_stateManager));
+            } else {
+                printf("It's a draw\n");
+                _stateManager.RequestStateChange(std::make_unique<Menu>(_stateManager));
+            }
+        }
     }
 
     void Arena::PlaceCard(int x, int y)
