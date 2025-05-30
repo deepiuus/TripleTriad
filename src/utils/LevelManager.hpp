@@ -10,6 +10,8 @@
 
 #include <fstream>
 #include "../IGames.hpp"
+#include "StateManager.hpp"
+#include "../states/Menu.hpp"
 #include "Error.hpp"
 
 namespace triad
@@ -23,15 +25,17 @@ namespace triad
     };
     class LevelManager {
         public:
-            LevelManager();
+            LevelManager(StateManager &stateManager);
             ~LevelManager();
             void LoadLevel();
+            void NextLevel();
             TLevel GetLevel() const;
             const std::vector<std::vector<char>> &GetMap() const;
             void ResetLevel();
         private:
             TLevel _currentLevel;
             std::vector<std::vector<char>> _map;
+            StateManager &_stateManager;
     };
 }
 

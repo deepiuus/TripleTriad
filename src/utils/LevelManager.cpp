@@ -9,10 +9,9 @@
 
 namespace triad
 {
-    LevelManager::LevelManager()
-        : _currentLevel(TLevel::LEVEL1)
+    LevelManager::LevelManager(StateManager &stateManager)
+        : _currentLevel(TLevel::LEVEL1), _map(), _stateManager(stateManager)
     {
-        LoadLevel();
     }
 
     LevelManager::~LevelManager()
@@ -43,6 +42,29 @@ namespace triad
             _map.push_back(row);
         }
         mapFile.close();
+    }
+
+    void LevelManager::NextLevel()
+    {
+        switch (_currentLevel) {
+            case TLevel::LEVEL1:
+                _currentLevel = TLevel::LEVEL2;
+                break;
+            case TLevel::LEVEL2:
+                _currentLevel = TLevel::LEVEL3;
+                break;
+            case TLevel::LEVEL3:
+                _currentLevel = TLevel::LEVEL4;
+                break;
+            case TLevel::LEVEL4:
+                _currentLevel = TLevel::LEVEL5;
+                break;
+            case TLevel::LEVEL5:
+                _stateManager.RequestStateChange(std::make_unique<Menu>(_stateManager));
+                break;
+            default: break;
+        }
+        LoadLevel();
     }
 
     TLevel LevelManager::GetLevel() const

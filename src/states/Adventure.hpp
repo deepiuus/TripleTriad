@@ -26,14 +26,29 @@ namespace triad
             void Destroy() override;
 
         private:
-            bool isCellFree(int x, int y) const;
+            void getDirection(int &dx, int &dy, TKey key) const;
+            void MapLogic(int dx, int dy);
             bool isRockAt(int x, int y) const;
+            void RockLogic(int dx, int dy, int newX, int newY);
+            bool isCellFree(int x, int y) const;
+            void initTextures();
+            void setTiles(sf::Vector2f offset);
             StateManager &_stateManager;
             LevelManager _levelManager;
             const std::vector<std::vector<char>> *_map;
             std::vector<sf::Vector2i> _rocks;
             sf::Vector2i _playerPos;
             int _tileSize;
+            sf::Texture _floorTexture;
+            sf::Texture _wallTexture;
+            sf::Texture _rockTexture;
+            sf::Texture _waifuTexture;
+            sf::Texture _chadTexture;
+            sf::Sprite _floorSprite;
+            sf::Sprite _wallSprite;
+            sf::Sprite _rockSprite;
+            sf::Sprite _waifuSprite;
+            sf::Sprite _chadSprite;
     };
 }
 
