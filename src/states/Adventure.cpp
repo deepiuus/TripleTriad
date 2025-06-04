@@ -10,7 +10,7 @@
 namespace triad
 {
     Adventure::Adventure(StateManager &stateManager) : _stateManager(stateManager),
-        _levelManager(stateManager), _map(nullptr), _rocks(), _playerPos(0, 0), _tileSize(64)
+        _levelManager(stateManager.GetLevelManager()), _map(nullptr), _rocks(), _playerPos(0, 0), _tileSize(64)
     {
     }
 
@@ -21,6 +21,7 @@ namespace triad
     void Adventure::Init()
     {
         try {
+            initTextures();
             _levelManager.LoadLevel();
             _map = &_levelManager.GetMap();
             _rocks.clear();
@@ -96,16 +97,23 @@ namespace triad
             }
             if ((*_map)[_playerPos.y][_playerPos.x] == 'W') {
                 try {
-                    _levelManager.NextLevel();
-                    Init();
+                    _stateManager.RequestStateChange(std::make_unique<Visual>(_stateManager));
+                    if (_levelManager.GetLevel() == TLevel::LEVEL5) {
+                        _levelManager.ResetLevel();
+                        _stateManager.RequestStateChange(std::make_unique<Menu>(_stateManager));
+                        return;
+                    }
+                    return;
                 } catch (const Error &e) {
+                    _levelManager.ResetLevel();
                     _stateManager.RequestStateChange(std::make_unique<Menu>(_stateManager));
+                    return;
                 }
             }
         }
     }
 
-    void Adventure::getDirection(int &dx, int &dy, TKey key) const
+    void Adventure::getDirection(int &dx, int &dy, TKey key)
     {
         switch (key) {
             case TKey::UP:
@@ -121,6 +129,7 @@ namespace triad
                 dx = 1;
                 break;
             case TKey::ESCAPE:
+                _levelManager.ResetLevel();
                 _stateManager.RequestStateChange(std::make_unique<Menu>(_stateManager));
                 break;
             default:
@@ -191,22 +200,38 @@ namespace triad
 
     void Adventure::Display()
     {
+        if (!_stateManager.GetWindow().isOpen() || !_map) {
+            return;
+        }
         sf::Vector2f offset(
             (_stateManager.GetWindow().getSize().x - _map->at(0).size() * _tileSize) / 2,
             (_stateManager.GetWindow().getSize().y - _map->size() * _tileSize) / 2
         );
         _stateManager.GetWindow().clear(sf::Color::Yellow);
-        initTextures();
         setTiles(offset);
         for (const auto& rock : _rocks) {
             _rockSprite.setScale(4.0f, 4.0f);
             _rockSprite.setPosition(offset.x + rock.x * _tileSize, offset.y + rock.y * _tileSize);
             _stateManager.GetWindow().draw(_rockSprite);
         }
-        _stateManager.GetWindow().display();
     }
 
     void Adventure::Destroy()
     {
+        _floorSprite.setTexture(sf::Texture());
+        _wallSprite.setTexture(sf::Texture());
+        _rockSprite.setTexture(sf::Texture());
+        _waifuSprite.setTexture(sf::Texture());
+        _chadSprite.setTexture(sf::Texture());
+        _floorTexture = sf::Texture();
+        _wallTexture = sf::Texture();
+        _rockTexture = sf::Texture();
+        _waifuTexture = sf::Texture();
+        _chadTexture = sf::Texture();
+        _floorSprite = sf::Sprite();
+        _wallSprite = sf::Sprite();
+        _rockSprite = sf::Sprite();
+        _waifuSprite = sf::Sprite();
+        _chadSprite = sf::Sprite();
     }
 }

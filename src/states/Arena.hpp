@@ -35,7 +35,6 @@ namespace triad
             void ResetCard();
             int width;
             int height;
-            sf::RenderWindow &_window;
             sf::Sprite _sprite;
             sf::Texture _texture;
             sf::Sprite _cardSprite;

@@ -10,6 +10,7 @@
 
 #include <memory>
 #include "../IGames.hpp"
+#include "LevelManager.hpp"
 
 namespace triad
 {
@@ -25,10 +26,12 @@ namespace triad
             void ProcessStateChange();
             void Update();
             void Display();
+            LevelManager &GetLevelManager();
         private:
             std::unique_ptr<IGames> _currentState;
             std::unique_ptr<IGames> _nextState;
             sf::RenderWindow _window;
+            LevelManager _levelManager;
     };
 }
 

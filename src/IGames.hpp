@@ -23,6 +23,7 @@ namespace triad
         LEFT,
         RIGHT,
         ENTER,
+        SPACE,
         ESCAPE,
         LCLICK,
         RCLICK,

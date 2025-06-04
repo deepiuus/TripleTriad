@@ -47,6 +47,9 @@ namespace triad
                         case sf::Keyboard::Enter:
                             key = TKey::ENTER;
                             break;
+                        case sf::Keyboard::Space:
+                            key = TKey::SPACE;
+                            break;
                         case sf::Keyboard::Escape:
                             key = TKey::ESCAPE;
                             break;
@@ -118,9 +121,16 @@ namespace triad
 
     void StateManager::Display()
     {
+        if (!_window.isOpen())
+            return;
         if (_currentState) {
             _currentState->Display();
         }
         _window.display();
+    }
+
+    LevelManager &StateManager::GetLevelManager()
+    {
+        return _levelManager;
     }
 }

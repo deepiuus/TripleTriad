@@ -12,6 +12,7 @@
 #include "../utils/StateManager.hpp"
 #include "../utils/LevelManager.hpp"
 #include "Menu.hpp"
+#include "Visual.hpp"
 
 namespace triad
 {
@@ -26,7 +27,7 @@ namespace triad
             void Destroy() override;
 
         private:
-            void getDirection(int &dx, int &dy, TKey key) const;
+            void getDirection(int &dx, int &dy, TKey key);
             void MapLogic(int dx, int dy);
             bool isRockAt(int x, int y) const;
             void RockLogic(int dx, int dy, int newX, int newY);

@@ -9,8 +9,8 @@
 
 namespace triad
 {
-    LevelManager::LevelManager(StateManager &stateManager)
-        : _currentLevel(TLevel::LEVEL1), _map(), _stateManager(stateManager)
+    LevelManager::LevelManager()
+        : _currentLevel(TLevel::LEVEL1), _map()
     {
     }
 
@@ -60,7 +60,6 @@ namespace triad
                 _currentLevel = TLevel::LEVEL5;
                 break;
             case TLevel::LEVEL5:
-                _stateManager.RequestStateChange(std::make_unique<Menu>(_stateManager));
                 break;
             default: break;
         }
@@ -79,5 +78,52 @@ namespace triad
 
     void LevelManager::ResetLevel()
     {
+        _currentLevel = TLevel::LEVEL1;
+        LoadLevel();
+    }
+
+    void LevelManager::StartDialogue()
+    {
+        _dialogueIndex = 0;
+        _dialogue.clear();
+        switch (_currentLevel) {
+            case TLevel::LEVEL1:
+                _dialogue = {"Welcome to the first level!", "Prepare for your adventure!"};
+                break;
+            case TLevel::LEVEL2:
+                _dialogue = {"You have reached the second level!", "Keep going!"};
+                break;
+            case TLevel::LEVEL3:
+                _dialogue = {"Third level, you're doing great!", "Stay focused!"};
+                break;
+            case TLevel::LEVEL4:
+                _dialogue = {"Almost there, fourth level!", "Don't give up!"};
+                break;
+            case TLevel::LEVEL5:
+                _dialogue = {"Final level, make it count!", "Victory is within reach!"};
+                break;
+            default: break;
+        }
+    }
+
+    bool LevelManager::IsDialogueFinished() const
+    {
+        return _dialogueIndex >= _dialogue.size();
+    }
+
+    const std::string &LevelManager::GetDialogue() const
+    {
+        static const std::string empty = "";
+        if (_dialogue.empty() || _dialogueIndex >= _dialogue.size()) {
+            return empty;
+        }
+        return _dialogue[_dialogueIndex];
+    }
+
+    void LevelManager::NextDialogue()
+    {
+        if (!IsDialogueFinished()) {
+            _dialogueIndex++;
+        }
     }
 }

@@ -13,8 +13,8 @@
 namespace triad
 {
     Menu::Menu(StateManager &stateManager)
-        : _stateManager(stateManager), _window(stateManager.GetWindow()),
-        width(800), height(600), _selectedOption(0), _optionSelected(false), _hoveredOption(-1)
+        : _stateManager(stateManager), width(800), height(600), _selectedOption(0),
+        _optionSelected(false), _hoveredOption(-1)
     {
         _options = {"Adventure", "Arena", "Settings", "Quit"};
     }
@@ -30,7 +30,7 @@ namespace triad
                 throw Error("Failed to load font");
             }
         } catch (const Error &e) {
-            _window.close();
+            _stateManager.GetWindow().close();
             throw;
         }
     }
@@ -45,7 +45,7 @@ namespace triad
                 _selectedOption = (_selectedOption + 1) % _options.size();
                 break;
             case TKey::ESCAPE:
-                _window.close();
+                _stateManager.GetWindow().close();
                 _stateManager.RequestStateChange(nullptr);
                 break;
             case TKey::ENTER:
@@ -70,13 +70,14 @@ namespace triad
 
     void Menu::Update()
     {
-        if (!_window.isOpen()) {
+        if (!_stateManager.GetWindow().isOpen()) {
             _stateManager.RequestStateChange(nullptr);
             return;
         }
         if (_optionSelected) {
             switch (_selectedOption) {
                 case 0:
+                    _stateManager.GetLevelManager().ResetLevel();
                     _stateManager.RequestStateChange(std::make_unique<Adventure>(_stateManager));
                     break;
                 case 1:
@@ -86,7 +87,7 @@ namespace triad
                     _stateManager.RequestStateChange(std::make_unique<Settings>(_stateManager));
                     break;
                 case 3:
-                    _window.close();
+                    _stateManager.GetWindow().close();
                     _stateManager.RequestStateChange(nullptr);
                     break;
             }
@@ -97,9 +98,9 @@ namespace triad
     void Menu::Display()
     {
         const float spacing = 50.0f;
-        sf::Vector2i mousePosition = sf::Mouse::getPosition(_window);
+        sf::Vector2i mousePosition = sf::Mouse::getPosition(_stateManager.GetWindow());
 
-        _window.clear(sf::Color::Black);
+        _stateManager.GetWindow().clear(sf::Color::Black);
         for (size_t i = 0; i < _options.size(); ++i) {
             text.setFont(font);
             text.setString(_options[i]);
@@ -116,9 +117,9 @@ namespace triad
             text.setFillColor(i == _selectedOption ? sf::Color::Red : sf::Color::White);
             text.setPosition(width / 2 - text.getGlobalBounds().width / 2,
                             height / 2 - (_options.size() * spacing) / 2 + i * spacing);
-            _window.draw(text);
+            _stateManager.GetWindow().draw(text);
         }
-        _window.display();
+        _stateManager.GetWindow().display();
     }
 
     void Menu::Destroy()

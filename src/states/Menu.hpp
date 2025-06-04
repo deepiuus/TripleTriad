@@ -40,7 +40,6 @@ namespace triad
             bool _optionSelected;
             std::vector<std::string> _options;
             StateManager &_stateManager;
-            sf::RenderWindow &_window;
     };
 }
 

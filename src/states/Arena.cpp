@@ -10,7 +10,7 @@
 namespace triad
 {
     Arena::Arena(StateManager &stateManager)
-        : _stateManager(stateManager), _window(stateManager.GetWindow()), width(800), height(600)
+        : _stateManager(stateManager), width(800), height(600)
     {
     }
 
@@ -253,7 +253,7 @@ namespace triad
 
     void Arena::DraggingCard()
     {
-        sf::Vector2i mousePos = sf::Mouse::getPosition(_window);
+        sf::Vector2i mousePos = sf::Mouse::getPosition(_stateManager.GetWindow());
 
         for (size_t i = 0; i < _player1Cards.size(); i++) {
             if (_player1Cards[i].getGlobalBounds().contains(
@@ -291,7 +291,7 @@ namespace triad
     void Arena::Update()
     {
         if (_dragging) {
-            sf::Vector2i mousePos = sf::Mouse::getPosition(_window);
+            sf::Vector2i mousePos = sf::Mouse::getPosition(_stateManager.GetWindow());
             if (_draggedCard.x == 0)
                 _player1Cards[_draggedCard.y].setPosition(sf::Vector2f(mousePos) + _dragOffset);
             else if (_draggedCard.x == 1)
@@ -301,17 +301,17 @@ namespace triad
 
     void Arena::Display()
     {
-        _window.clear(sf::Color::Blue);
+        _stateManager.GetWindow().clear(sf::Color::Blue);
         _sprite.setTexture(_texture);
         _sprite.setPosition(width / 2 - _texture.getSize().x / 2,
                             height / 2 - _texture.getSize().y / 2);
         _sprite.setScale(1.0f, 1.0f);
-        _window.draw(_sprite);
+        _stateManager.GetWindow().draw(_sprite);
 
         for (auto &sprite : _player1Cards)
-            _window.draw(sprite);
+            _stateManager.GetWindow().draw(sprite);
         for (auto &sprite : _player2Cards)
-            _window.draw(sprite);
+            _stateManager.GetWindow().draw(sprite);
     }
 
     void Arena::Destroy()
