@@ -10,7 +10,7 @@
 namespace triad
 {
     Arena::Arena(StateManager &stateManager)
-        : _stateManager(stateManager), width(800), height(600)
+        : _stateManager(stateManager), width(800), height(600), _fromMenu(false)
     {
     }
 
@@ -80,6 +80,7 @@ namespace triad
         float gridStartX = width / 2 - gridWidth / 2;
         float gridStartY = height / 2 - gridHeight / 2;
 
+        MusicManager::GetInstance().Play("assets/sounds/Dance-Monster.ogg");
         SetupBoard(cellSize, cellGap, gridStartX, gridStartY);
         SetupCards(cardSpacing, cardY);
     }
@@ -188,16 +189,28 @@ namespace triad
         }
         printf("Player has %d cards, Ennemy has %d cards\n", playerCount, ennemyCount);
         if (occupiedCount == 9) {
-            if (playerCount > ennemyCount) {
+            if (playerCount > ennemyCount)
                 printf("Player wins\n");
-                _stateManager.RequestStateChange(std::make_unique<Menu>(_stateManager));
-            } else if (ennemyCount > playerCount) {
+            else if (ennemyCount > playerCount)
                 printf("Ennemy wins\n");
-                _stateManager.RequestStateChange(std::make_unique<Menu>(_stateManager));
-            } else {
+            else
                 printf("It's a draw\n");
+            if (_fromMenu) {
+                auto arena = std::make_unique<Arena>(_stateManager);
+                arena->SetFromMenu(true);
+                _stateManager.RequestStateChange(std::move(arena));
+                return;
+            }
+            if (playerCount > ennemyCount) {
+                _stateManager.GetLevelManager().NextLevel();
+                _stateManager.RequestStateChange(std::make_unique<Adventure>(_stateManager));
+            } else if (ennemyCount > playerCount) {
+                _stateManager.GetLevelManager().ResetLevel();
+                _stateManager.RequestStateChange(std::make_unique<Adventure>(_stateManager));
+            } else {
                 _stateManager.RequestStateChange(std::make_unique<Menu>(_stateManager));
             }
+            return;
         }
     }
 
@@ -316,5 +329,10 @@ namespace triad
 
     void Arena::Destroy()
     {
+    }
+
+    void Arena::SetFromMenu(bool fromMenu)
+    {
+        _fromMenu = fromMenu;
     }
 }

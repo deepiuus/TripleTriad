@@ -13,6 +13,7 @@
 #include "../utils/LevelManager.hpp"
 #include "Menu.hpp"
 #include "Visual.hpp"
+#include "Arena.hpp"
 
 namespace triad
 {

@@ -20,6 +20,7 @@ namespace triad
 
     void Visual::Init()
     {
+        MusicManager::GetInstance().Play("assets/sounds/Variation-on-Egmont.ogg");
         if (!_font.loadFromFile("assets/fonts/upheavtt.ttf")) {
             throw Error("Failed to load font");
         }
@@ -42,8 +43,7 @@ namespace triad
                 if (!_levelManager.IsDialogueFinished()) {
                     _levelManager.NextDialogue();
                 } else {
-                    _levelManager.NextLevel();
-                    _stateManager.RequestStateChange(std::make_unique<Adventure>(_stateManager));
+                    _stateManager.RequestStateChange(std::make_unique<Arena>(_stateManager));
                     return;
                 }
                 break;

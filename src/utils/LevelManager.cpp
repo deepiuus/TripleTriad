@@ -78,7 +78,6 @@ namespace triad
 
     void LevelManager::ResetLevel()
     {
-        _currentLevel = TLevel::LEVEL1;
         LoadLevel();
     }
 

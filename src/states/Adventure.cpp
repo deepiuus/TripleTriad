@@ -20,24 +20,20 @@ namespace triad
 
     void Adventure::Init()
     {
-        try {
-            initTextures();
-            _levelManager.LoadLevel();
-            _map = &_levelManager.GetMap();
-            _rocks.clear();
-            for (size_t y = 0; y < _map->size(); y++) {
-                for (size_t x = 0; x < (*_map)[y].size(); x++) {
-                    if ((*_map)[y][x] == 'P') {
-                        _playerPos = sf::Vector2i(x, y);
-                    }
-                    if ((*_map)[y][x] == 'X') {
-                        _rocks.push_back(sf::Vector2i(x, y));
-                    }
+        MusicManager::GetInstance().Play("assets/sounds/Pure-Attitude.ogg");
+        initTextures();
+        _levelManager.LoadLevel();
+        _map = &_levelManager.GetMap();
+        _rocks.clear();
+        for (size_t y = 0; y < _map->size(); y++) {
+            for (size_t x = 0; x < (*_map)[y].size(); x++) {
+                if ((*_map)[y][x] == 'P') {
+                    _playerPos = sf::Vector2i(x, y);
+                }
+                if ((*_map)[y][x] == 'X') {
+                    _rocks.push_back(sf::Vector2i(x, y));
                 }
             }
-        } catch (const Error &e) {
-            _stateManager.GetWindow().close();
-            throw Error("Failed to load level: " + std::string(e.what()));
         }
     }
 

@@ -25,13 +25,9 @@ namespace triad
 
     void Menu::Init()
     {
-        try {
-            if (!font.loadFromFile("assets/fonts/upheavtt.ttf")) {
-                throw Error("Failed to load font");
-            }
-        } catch (const Error &e) {
-            _stateManager.GetWindow().close();
-            throw;
+        MusicManager::GetInstance().Play("assets/sounds/Kick-Shock.ogg");
+        if (!font.loadFromFile("assets/fonts/upheavtt.ttf")) {
+            throw Error("Failed to load font");
         }
     }
 
@@ -80,9 +76,12 @@ namespace triad
                     _stateManager.GetLevelManager().ResetLevel();
                     _stateManager.RequestStateChange(std::make_unique<Adventure>(_stateManager));
                     break;
-                case 1:
-                    _stateManager.RequestStateChange(std::make_unique<Arena>(_stateManager));
+                case 1: {
+                    auto arena = std::make_unique<Arena>(_stateManager);
+                    arena->SetFromMenu(true);
+                    _stateManager.RequestStateChange(std::move(arena));
                     break;
+                }
                 case 2:
                     _stateManager.RequestStateChange(std::make_unique<Settings>(_stateManager));
                     break;
@@ -126,7 +125,5 @@ namespace triad
     {
         font = sf::Font();
         text = sf::Text();
-        sound = sf::Sound();
-        buffer = sf::SoundBuffer();
     }
 }

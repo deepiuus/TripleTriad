@@ -12,6 +12,7 @@
 #include "../utils/StateManager.hpp"
 #include "../utils/CardManager.hpp"
 #include "Menu.hpp"
+#include "Adventure.hpp"
 
 namespace triad
 {
@@ -24,6 +25,7 @@ namespace triad
             void Update() override;
             void Display() override;
             void Destroy() override;
+            void SetFromMenu(bool fromMenu);
 
         private:
             void SetupBoard(float cellSize, float cellGap, float gridStartX, float gridStartY);
@@ -48,6 +50,7 @@ namespace triad
             sf::Vector2f _dragOffset;
             sf::FloatRect _boardGrid[3][3];
             std::pair<int, int> _boardOccupancy[3][3];
+            bool _fromMenu;
     };
 }
 

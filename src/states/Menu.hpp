@@ -11,6 +11,7 @@
 #include <vector>
 #include "../IGames.hpp"
 #include "../utils/StateManager.hpp"
+#include "../utils/MusicManager.hpp"
 #include "../utils/Error.hpp"
 
 namespace triad
@@ -33,8 +34,6 @@ namespace triad
             sf::Event event;
             sf::Font font;
             sf::Text text;
-            sf::SoundBuffer buffer;
-            sf::Sound sound;
             int _selectedOption;
             int _hoveredOption;
             bool _optionSelected;
