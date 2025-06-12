@@ -125,4 +125,9 @@ namespace triad
             _dialogueIndex++;
         }
     }
+
+    size_t LevelManager::GetDialogueIndex() const
+    {
+        return _dialogueIndex;
+    }
 }

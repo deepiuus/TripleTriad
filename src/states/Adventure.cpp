@@ -155,24 +155,36 @@ namespace triad
                 _floorSprite.setScale(4.0f, 4.0f);
                 _floorSprite.setPosition(offset.x + x * _tileSize, offset.y + y * _tileSize);
                 _stateManager.GetWindow().draw(_floorSprite);
+            }
+        }
+        for (size_t y = 0; y < _map->size(); y++) {
+            for (size_t x = 0; x < (*_map)[y].size(); x++) {
                 if (x == _playerPos.x && y == _playerPos.y) {
                     _chadSprite.setScale(1.0f, 1.0f);
                     _chadSprite.setPosition(offset.x + x * _tileSize, offset.y + y * _tileSize);
                     _stateManager.GetWindow().draw(_chadSprite);
                 }
                 switch ((*_map)[y][x]) {
-                    case '#': {
+                    case '#':
                         _wallSprite.setScale(4.0f, 4.0f);
                         _wallSprite.setPosition(offset.x + x * _tileSize, offset.y + y * _tileSize);
                         _stateManager.GetWindow().draw(_wallSprite);
                         break;
-                    }
-                    case 'W': {
+                    case 'W':
                         _waifuSprite.setScale(1.0f, 1.0f);
                         _waifuSprite.setPosition(offset.x + x * _tileSize, offset.y + y * _tileSize);
                         _stateManager.GetWindow().draw(_waifuSprite);
                         break;
-                    }
+                    case 'K':
+                        _keySprite.setScale(1.0f, 1.0f);
+                        _keySprite.setPosition(offset.x + x * _tileSize, offset.y + y * _tileSize);
+                        _stateManager.GetWindow().draw(_keySprite);
+                        break;
+                    case 'O':
+                        _lockSprite.setScale(4.0f, 4.0f);
+                        _lockSprite.setPosition(offset.x + x * _tileSize, offset.y + y * _tileSize);
+                        _stateManager.GetWindow().draw(_lockSprite);
+                        break;
                     default:
                         break;
                 }
@@ -187,11 +199,15 @@ namespace triad
         _rockTexture.loadFromFile("assets/sprites/rock.png");
         _waifuTexture.loadFromFile("assets/sprites/WaifuChibi.png");
         _chadTexture.loadFromFile("assets/sprites/ChadChibi.png");
+        _keyTexture.loadFromFile("assets/sprites/Key.png");
+        _lockTexture.loadFromFile("assets/sprites/Lock.png");
         _floorSprite.setTexture(_floorTexture);
         _wallSprite.setTexture(_wallTexture);
         _rockSprite.setTexture(_rockTexture);
         _waifuSprite.setTexture(_waifuTexture);
         _chadSprite.setTexture(_chadTexture);
+        _keySprite.setTexture(_keyTexture);
+        _lockSprite.setTexture(_lockTexture);
     }
 
     void Adventure::Display()
@@ -219,6 +235,8 @@ namespace triad
         _rockSprite.setTexture(sf::Texture());
         _waifuSprite.setTexture(sf::Texture());
         _chadSprite.setTexture(sf::Texture());
+        _keySprite.setTexture(sf::Texture());
+        _lockSprite.setTexture(sf::Texture());
         _floorTexture = sf::Texture();
         _wallTexture = sf::Texture();
         _rockTexture = sf::Texture();
@@ -229,5 +247,7 @@ namespace triad
         _rockSprite = sf::Sprite();
         _waifuSprite = sf::Sprite();
         _chadSprite = sf::Sprite();
+        _keySprite = sf::Sprite();
+        _lockSprite = sf::Sprite();
     }
 }

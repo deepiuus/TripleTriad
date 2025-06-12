@@ -27,10 +27,20 @@ namespace triad
             void Destroy() override;
 
         private:
+            void initTextures();
+            int _width;
+            int _height;
+            int _currentFace;
             StateManager &_stateManager;
             LevelManager &_levelManager;
             sf::Font _font;
             sf::Text _text;
+            sf::Texture _orokaTexture;
+            sf::Sprite _orokaSprite;
+            sf::Texture _orokaFaceTexture;
+            sf::Sprite _orokaFaceSprite;
+            std::vector<sf::Texture> _orokaPoutTextures;
+            int _orokaPoutIndex;
     };
 }
 

@@ -51,6 +51,10 @@ namespace triad
             sf::Sprite _rockSprite;
             sf::Sprite _waifuSprite;
             sf::Sprite _chadSprite;
+            sf::Texture _keyTexture;
+            sf::Sprite _keySprite;
+            sf::Texture _lockTexture;
+            sf::Sprite _lockSprite;
     };
 }
 

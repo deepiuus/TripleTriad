@@ -34,6 +34,7 @@ namespace triad
             bool IsDialogueFinished() const;
             const std::string &GetDialogue() const;
             void NextDialogue();
+            size_t GetDialogueIndex() const;
         private:
             TLevel _currentLevel;
             std::vector<std::vector<char>> _map;
